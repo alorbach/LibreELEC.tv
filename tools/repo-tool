@@ -129,7 +129,10 @@ usage() {
   echo "         $0 -xml                              to update the addons.xml"
 }
 
-repo="packages/mediacenter/kodi-binary-addons/game.libretro."
+# repo="packages/mediacenter/kodi-binary-addons/game.libretro."
+repo="packages/addons"
+
+
 
 case $1 in
   -b)

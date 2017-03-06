@@ -196,7 +196,8 @@
   DISTRO_SRC="http://sources.libreelec.tv/$LIBREELEC_VERSION"
 
 # Addon Server Url
-  ADDON_SERVER_URL="http://addons.libreelec.tv"
+#  ADDON_SERVER_URL="http://addons.libreelec.tv"
+  ADDON_SERVER_URL="http://172.21.0.50/libreelec/addons"
 
 # set the addon dirs
   ADDON_PATH="$ADDON_VERSION/$PROJECT/$TARGET_ARCH"
