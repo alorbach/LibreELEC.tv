@@ -32,6 +32,9 @@ PKG_ADDON_NAME="Hyperion"
 PKG_ADDON_TYPE="xbmc.service"
 PKG_ADDON_REPOVERSION="7.0"
 
+# TODO get qt5 fixed for webserver build! 
+# export CMAKE_PREFIX_PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt5
+
 AMLOGIC_SUPPORT="-DENABLE_AMLOGIC=0"
 DISPMANX_SUPPORT="-DENABLE_DISPMANX=0"
 FB_SUPPORT="-DENABLE_FB=1"

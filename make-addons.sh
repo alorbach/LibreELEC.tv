@@ -2,11 +2,13 @@
 
 # Build Addons
 export PROJECT=H3 ARCH=arm ADDON_VERSION=7.0
+ADDONPATH="./packages/addons/*"
+#ADDONPATH="./packages/mediacenter/kodi-binary-addons"
 
 #scripts/create_addon hyperion
 #scripts/create_addon oscam
 
-for package in $(find ./packages/addons/* -iname package.mk) ; do
+for package in $(find $ADDONPATH -iname package.mk) ; do
 (
 	. $package
 	if [ "$PKG_IS_ADDON" = "yes" ] ; then
@@ -47,6 +49,7 @@ fi
 olddir=$dir
 done
 
+
 echo "[*] updating addons.xml* ..."
 rm -rf .addons
 pwd=`pwd`
@@ -68,7 +71,10 @@ echo '
 mv $line.tmp $line
 cd $localdir
 
-md5sum addons.xml > addons.xml.md5
+# Update addons.xml.gz!
+rm addons.xml.gz
+gzip addons.xml
+md5sum addons.xml.gz > addons.xml.gz.md5
 cd $pwd
 done
 rm -rf .addons

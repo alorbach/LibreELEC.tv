@@ -113,8 +113,8 @@
 
   # KODI Player implementation to use (default / bcm2835-driver / libfslvpuwrap)
     KODIPLAYER_DRIVER="cedarx"
-# Software
-# KODIPLAYER_DRIVER="default"
+  # Software Driver test
+  # KODIPLAYER_DRIVER="default"
 
 
   # Modules to install in initramfs for early boot
@@ -145,3 +145,10 @@
 
   # additional drivers
     ADDITIONAL_DRIVERS+=" mt7601u"
+
+################################################################################
+# Settings added by DELTA!
+################################################################################
+
+  # Changed Addon URL to my one  
+    ADDON_SERVER_URL="http://libreelec.1337-server.net/addons"

@@ -193,7 +193,7 @@ uart_rts        = port:PA02<2><1><default><default>
 uart_cts        = port:PA03<2><1><default><default>
 
 [uart3]
-uart_used       = 1
+uart_used       = 0
 uart_port       = 3
 uart_type       = 2
 uart_tx         = port:PA13<3><1><default><default>
