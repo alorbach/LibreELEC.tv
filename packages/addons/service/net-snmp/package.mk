@@ -53,16 +53,12 @@ make_target() {
 }
 
 makeinstall_target() {
-  make install INSTALL_PREFIX=$ROOT/$PKG_BUILD/.$TARGET_NAME
+  make install INSTALL_PREFIX=$PKG_BUILD/.$TARGET_NAME
 }
 
 addon() {
   mkdir -p $ADDON_BUILD/$PKG_ADDON_ID
-  mv $PKG_BUILD/.$TARGET_NAME/usr/sbin/snmpd $PKG_BUILD/.$TARGET_NAME/usr/bin/snmpd
-  rm -rf $PKG_BUILD/.$TARGET_NAME/usr/sbin/
-  rm -rf $PKG_BUILD/.$TARGET_NAME/usr/include/
-  cp -r $PKG_BUILD/.$TARGET_NAME/usr/* $ADDON_BUILD/$PKG_ADDON_ID/
-  $STRIP $ADDON_BUILD/$PKG_ADDON_ID/lib/*.so
-  $STRIP $ADDON_BUILD/$PKG_ADDON_ID/bin/snmpd
+  cp -r $PKG_BUILD/.$TARGET_NAME/usr/bin $PKG_BUILD/.$TARGET_NAME/usr/lib $PKG_BUILD/.$TARGET_NAME/usr/share $ADDON_BUILD/$PKG_ADDON_ID/
+  cp $PKG_BUILD/.$TARGET_NAME/usr/sbin/snmpd $ADDON_BUILD/$PKG_ADDON_ID/bin/snmpd
 }
 

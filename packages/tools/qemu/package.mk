@@ -1,5 +1,5 @@
 ################################################################################
-#      This file is part of LibreELEC - http://www.libreelec.tv
+#      This file is part of LibreELEC - https://libreelec.tv
 #      Copyright (C) 2016- Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
@@ -30,14 +30,14 @@ PKG_LONGDESC="QEMU is a generic and open source machine emulator and virtualizer
 PKG_IS_ADDON="no"
 PKG_AUTORECONF="no"
 
-HOST_CONFIGURE_OPTS="--prefix=$ROOT/$TOOLCHAIN \
-  --bindir=$ROOT/$TOOLCHAIN/bin \
-  --sbindir=$ROOT/$TOOLCHAIN/sbin \
-  --sysconfdir=$ROOT/$TOOLCHAIN/etc \
-  --libexecdir=$ROOT/$TOOLCHAIN/lib \
-  --localstatedir=$ROOT/$TOOLCHAIN/var \
-  --extra-cflags=-I$ROOT/$TOOLCHAIN/include \
-  --extra-ldflags=-L$ROOT/$TOOLCHAIN/lib \
+HOST_CONFIGURE_OPTS="--prefix=$TOOLCHAIN \
+  --bindir=$TOOLCHAIN/bin \
+  --sbindir=$TOOLCHAIN/sbin \
+  --sysconfdir=$TOOLCHAIN/etc \
+  --libexecdir=$TOOLCHAIN/lib \
+  --localstatedir=$TOOLCHAIN/var \
+  --extra-cflags=-I$TOOLCHAIN/include \
+  --extra-ldflags=-L$TOOLCHAIN/lib \
   --static \
   --disable-vnc \
   --disable-werror \

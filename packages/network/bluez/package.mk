@@ -17,7 +17,7 @@
 ################################################################################
 
 PKG_NAME="bluez"
-PKG_VERSION="5.43"
+PKG_VERSION="5.44"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.bluez.org/"
@@ -50,7 +50,7 @@ PKG_CONFIGURE_OPTS_TARGET="--disable-dependency-tracking \
                            --disable-obex \
                            --enable-client \
                            --enable-systemd \
-                           --enable-tools \
+                           --enable-tools --enable-deprecated \
                            --enable-datafiles \
                            --disable-experimental \
                            --enable-sixaxis \
@@ -60,7 +60,7 @@ PKG_CONFIGURE_OPTS_TARGET="--disable-dependency-tracking \
 
 pre_configure_target() {
 # bluez fails to build in subdirs
-  cd $ROOT/$PKG_BUILD
+  cd $PKG_BUILD
     rm -rf .$TARGET_NAME
 
   export LIBS="-ltermcap"

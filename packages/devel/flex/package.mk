@@ -28,15 +28,15 @@ PKG_SHORTDESC="flex: Fast lexical analyzer generator"
 PKG_LONGDESC="flex is a tool for generating programs that perform pattern-matching on text."
 
 PKG_IS_ADDON="no"
-PKG_AUTORECONF="no"
+PKG_AUTORECONF="yes"
 
 PKG_CONFIGURE_OPTS_HOST="--enable-static --disable-shared --disable-rpath --with-gnu-ld"
 
 post_makeinstall_host() {
-  cat > $ROOT/$TOOLCHAIN/bin/lex << "EOF"
+  cat > $TOOLCHAIN/bin/lex << "EOF"
 #!/bin/sh
 exec flex "$@"
 EOF
 
-  chmod -v 755 $ROOT/$TOOLCHAIN/bin/lex
+  chmod -v 755 $TOOLCHAIN/bin/lex
 }

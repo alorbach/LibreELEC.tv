@@ -1,5 +1,5 @@
 ################################################################################
-#      This file is part of LibreELEC - http://www.libreelec.tv
+#      This file is part of LibreELEC - https://libreelec.tv
 #      Copyright (C) 2016 Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ PKG_CONFIGURE_OPTS_TARGET="--enable-static \
 
 pre_configure_target() {
 # nmap fails to build in subdirs
-  cd $ROOT/$PKG_BUILD
+  cd $PKG_BUILD
     rm -rf .$TARGET_NAME
 
   export CPPFLAGS="$CPPFLAGS -Iliblua"

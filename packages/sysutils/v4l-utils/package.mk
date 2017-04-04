@@ -19,7 +19,7 @@
 # with 1.0.0 repeat delay is broken. test on upgrade
 
 PKG_NAME="v4l-utils"
-PKG_VERSION="1.8.1"
+PKG_VERSION="1.12.2"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://linuxtv.org/"
@@ -45,4 +45,12 @@ post_makeinstall_target() {
 
   mkdir -p $INSTALL/usr/config
     cp -PR $PKG_DIR/config/* $INSTALL/usr/config
+
+  (
+    echo "# table libreelec_multi, type: RC6 NEC"
+    for f in rc6_mce xbox_360 zotac_ad10 hp_mce xbox_one cubox_i ; do
+      echo "# $f"
+      grep -v "^#" $INSTALL/usr/lib/udev/rc_keymaps/$f
+    done
+  ) > $INSTALL/usr/lib/udev/rc_keymaps/libreelec_multi
 }

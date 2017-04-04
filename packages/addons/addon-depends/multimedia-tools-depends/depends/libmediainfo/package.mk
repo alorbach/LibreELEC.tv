@@ -1,5 +1,5 @@
 ################################################################################
-#      This file is part of LibreELEC - http://www.libreelec.tv
+#      This file is part of LibreELEC - https://libreelec.tv
 #      Copyright (C) 2016 Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
@@ -53,5 +53,5 @@ post_makeinstall_target() {
     mkdir -p $SYSROOT_PREFIX/usr/include/MediaInfo/$i/
     cp -aP ../../../Source/MediaInfo/$i/*.h $SYSROOT_PREFIX/usr/include/MediaInfo/$i/
   done
-  cp -P libmediainfo-config $ROOT/$TOOLCHAIN/bin
+  cp -P libmediainfo-config $TOOLCHAIN/bin
 }

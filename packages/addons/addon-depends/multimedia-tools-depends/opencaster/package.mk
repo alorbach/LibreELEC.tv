@@ -1,5 +1,5 @@
 ################################################################################
-#      This file is part of LibreELEC - http://www.libreelec.tv
+#      This file is part of LibreELEC - https://libreelec.tv
 #      Copyright (C) 2016 Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
@@ -29,5 +29,5 @@ PKG_LONGDESC="OpenCaster is a free and open source MPEG2 transport stream data g
 PKG_AUTORECONF="no"
 
 pre_makeinstall_target() {
-  mkdir -p $ROOT/$PKG_BUILD/.install_pkg
+  mkdir -p $PKG_BUILD/.install_pkg
 }

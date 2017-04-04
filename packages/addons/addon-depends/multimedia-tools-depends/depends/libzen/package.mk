@@ -1,5 +1,5 @@
 ################################################################################
-#      This file is part of LibreELEC - http://www.libreelec.tv
+#      This file is part of LibreELEC - https://libreelec.tv
 #      Copyright (C) 2016 Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
@@ -50,5 +50,5 @@ post_makeinstall_target() {
     mkdir -p $SYSROOT_PREFIX/usr/include/ZenLib/$i/
     cp -aP ../../../Source/ZenLib/$i/*.h $SYSROOT_PREFIX/usr/include/ZenLib/$i/
   done
-  cp -P libzen-config $ROOT/$TOOLCHAIN/bin
+  cp -P libzen-config $TOOLCHAIN/bin
 }
