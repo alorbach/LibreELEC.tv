@@ -17,7 +17,8 @@
 ################################################################################
 
 PKG_NAME="rpi_ws281x"
-PKG_VERSION="3e6ea50"
+PKG_VERSION="f580777"
+PKG_SHA256="edc831ff9daac354c54bfab1dad52f282ad44225d5769e6ae2b45160fe21762e"
 PKG_ARCH="any"
 PKG_LICENSE=""
 PKG_SITE="https://github.com/hyperion-project/rpi_ws281x"
