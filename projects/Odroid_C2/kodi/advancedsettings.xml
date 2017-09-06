@@ -1,9 +1,10 @@
-<advancedsettings>
-  <cputempcommand>cputemp</cputempcommand>
-  <gputempcommand>gputemp</gputempcommand>
-  <cache>
-    <buffermode>1</buffermode>
-    <memorysize>157286400</memorysize>
-    <readfactor>40</readfactor>
-  </cache>
+<advancedsettings> 
+<cputempcommand>cputemp</cputempcommand> 
+<gputempcommand>gputemp</gputempcommand> 
+<cache> 
+  <buffermode>1</buffermode> 
+  <memorysize>104857600</memorysize> 
+  <readfactor>10</readfactor> 
+</cache> 
 </advancedsettings>
+
