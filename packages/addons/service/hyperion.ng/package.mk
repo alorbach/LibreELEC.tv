@@ -17,9 +17,9 @@
 ################################################################################
 
 PKG_NAME="hyperion.ng"
-PKG_VERSION="8644672"
-PKG_SHA256="6f3325a2b2b6cd56791883096a9ee85d477ab8cc8e8d1ac23ca8b918d422d10e"
-PKG_REV="100"
+PKG_VERSION="81f5f51"
+#PKG_SHA256="6f3325a2b2b6cd56791883096a9ee85d477ab8cc8e8d1ac23ca8b918d422d10e"
+PKG_REV="101"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/hyperion-project/hyperion.ng"
 PKG_URL="https://github.com/hyperion-project/hyperion.ng/archive/$PKG_VERSION.tar.gz"
