@@ -1,0 +1,13 @@
+[Unit]
+Description=/etc/rc.local Compatibility
+Before=kodi.service
+After=graphical.target
+
+[Service]
+Type=oneshot
+ExecStart=/etc/rc.local start
+StandardError=null
+RemainAfterExit=yes
+
+[Install]
+WantedBy=kodi.target
