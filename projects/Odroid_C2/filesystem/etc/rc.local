@@ -11,7 +11,8 @@
 #
 # Custom rc.local by delta
 
-# This fixes h265 issues with hyperion
+# Try to fix fixes h265 issues with hyperion
 echo 1 > /sys/module/amvdec_h265/parameters/double_write_mode
+echo 32 > /sys/module/amvdec_h265/parameters/max_buf_num
 
 exit 0

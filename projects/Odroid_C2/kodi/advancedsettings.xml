@@ -1,10 +1,10 @@
 <advancedsettings> 
 <cputempcommand>cputemp</cputempcommand> 
 <gputempcommand>gputemp</gputempcommand> 
-<cache> 
+<!--<cache> 
   <buffermode>1</buffermode> 
   <memorysize>104857600</memorysize> 
-  <readfactor>10</readfactor> 
-</cache> 
+  <readfactor>2</readfactor> 
+</cache>-->
 </advancedsettings>
 
