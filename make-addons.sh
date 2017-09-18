@@ -1,9 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 
 # Build Addons
 export PROJECT=H3 ARCH=arm ADDON_VERSION=7.0
-ADDONPATH="./packages/addons/*"
-#ADDONPATH="./packages/mediacenter/kodi-binary-addons"
+
+ADDONPATHES="./packages/addons ./packages/mediacenter/kodi-binary-addons"
+
+echo "Addon path?"
+select ADDONPATH in $ADDONPATHES 
+do
+        echo "Making Addons '$ADDONPATH' for '$PROJECT/$ARCH'"
+        break;
+done
 
 #scripts/create_addon hyperion
 #scripts/create_addon oscam
