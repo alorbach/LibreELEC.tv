@@ -76,6 +76,9 @@ while [ $NBWGET -gt 0 ]; do
   rm -f $PACKAGE
 
   if $WGET_CMD "$PKG_URL" || $WGET_CMD "$PACKAGE_MIRROR"; then
+    # disable SHA256 checks for now!
+    break; 
+
     CALC_SHA256="$(sha256sum $PACKAGE | cut -d" " -f1)"
 
     [ -z "${PKG_SHA256}" -o "${PKG_SHA256}" == "${CALC_SHA256}" ] && break
