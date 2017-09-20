@@ -17,8 +17,8 @@
 ################################################################################
 
 PKG_NAME="visualization.pictureit"
-PKG_VERSION="66f88ff"
-PKG_SHA256="94ea09635e54da380c1490899705b349caeafcd2dad1c6c0f534f4b6c52871ae"
+PKG_VERSION="8eb74a6"
+PKG_SHA256="358ced879c541974a4a2dbbaa7c6f633e77adb066bb639bb585e26a50820fd43"
 PKG_REV="5"
 PKG_ARCH="x86_64"
 PKG_LICENSE="GPL"
