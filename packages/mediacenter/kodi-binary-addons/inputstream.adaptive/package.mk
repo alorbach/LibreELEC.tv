@@ -17,8 +17,8 @@
 ################################################################################
 
 PKG_NAME="inputstream.adaptive"
-PKG_VERSION="aa62764"
-PKG_SHA256="eeab0719d89e9e6af8954e2651387d86d2a698ff3408db9366acca708b4159f3"
+PKG_VERSION="8e505bb"
+PKG_SHA256="327e82fea7506263f8ae2ca18079f2b4793d785ae1530afe2f71ffb36040bf62"
 PKG_LICENSE="GPL"
 PKG_REV="4"
 PKG_SITE="http://www.kodi.tv"

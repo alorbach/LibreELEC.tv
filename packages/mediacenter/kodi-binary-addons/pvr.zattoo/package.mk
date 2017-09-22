@@ -17,8 +17,8 @@
 ################################################################################
 
 PKG_NAME="pvr.zattoo"
-PKG_VERSION="3a707c5"
-PKG_SHA256="9e9728a318b8193f938564e8c6ae5bb2d7fc676061904dc7fa5c342fa59d4cc9"
+PKG_VERSION="d2ba3cc"
+PKG_SHA256="0640dad00c72fcf2b5027e281bb5a55db104a077c878eeef1c66939db9058aef"
 PKG_REV="4"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
