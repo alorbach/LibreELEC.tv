@@ -17,9 +17,9 @@
 ################################################################################
 
 PKG_NAME="pvr.octonet"
-PKG_VERSION="a77cf11"
-PKG_SHA256="9217e8e0bec3b882dd0c7cb30b9488be64514514e91dbad31556da1ad435b166"
-PKG_REV="5"
+PKG_VERSION="e9b4c05"
+PKG_SHA256="01bd1f5584cc5f781c09e33e0123b70037edcda35cfc02b5d50f5536fdb56608"
+PKG_REV="6"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.kodi.tv"

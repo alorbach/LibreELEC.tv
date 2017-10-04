@@ -28,7 +28,7 @@ index 45f42ad2e3..58730d535a 100644
 +  AddonPtr localAddon;
    addon->OnEnabled();
 +  // OE: systemctl enable & start on addon enable
-+  if (CAddonMgr::GetInstance().GetAddon(addon->ID().c_str(), localAddon, ADDON_SERVICE))
++  if (CServiceBroker::GetAddonMgr().GetAddon(addon->ID(), localAddon, ADDON_SERVICE))
 +    CallOEWrapper(addon->ID(), false);
 +  // OE
  }
@@ -38,7 +38,7 @@ index 45f42ad2e3..58730d535a 100644
 +
 +  AddonPtr localAddon;
 +  // OE: systemctl stop & disable on addon disable
-+  if (CAddonMgr::GetInstance().GetAddon(addon->ID().c_str(), localAddon, ADDON_SERVICE, false))
++  if (CServiceBroker::GetAddonMgr().GetAddon(addon->ID(), localAddon, ADDON_SERVICE, false))
 +    CallOEWrapper(addon->ID(), true);
 +  // OE
 +
@@ -52,7 +52,7 @@ index 45f42ad2e3..58730d535a 100644
 +  AddonPtr localAddon;
 +
 +  // OE: systemctl stop & disable / enable & start on addon upgrade
-+  if (CAddonMgr::GetInstance().GetAddon(addon->ID().c_str(), localAddon, ADDON_SERVICE))
++  if (CServiceBroker::GetAddonMgr().GetAddon(addon->ID(), localAddon, ADDON_SERVICE))
 +  {
 +    CallOEWrapper(addon->ID(), true);
 +    CallOEWrapper(addon->ID(), false);
@@ -67,7 +67,7 @@ index 45f42ad2e3..58730d535a 100644
 +  AddonPtr localAddon;
 +
 +  // OE: systemctl stop & disable on addon uninstall
-+  if (CAddonMgr::GetInstance().GetAddon(addon->ID().c_str(), localAddon, ADDON_SERVICE))
++  if (CServiceBroker::GetAddonMgr().GetAddon(addon->ID(), localAddon, ADDON_SERVICE))
 +    CallOEWrapper(addon->ID(), true);
 +  // OE
 +

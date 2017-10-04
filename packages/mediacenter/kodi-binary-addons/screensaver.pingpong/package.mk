@@ -17,9 +17,9 @@
 ################################################################################
 
 PKG_NAME="screensaver.pingpong"
-PKG_VERSION="cfd0a05"
-PKG_SHA256="c99ca83607dd9313ffde1ba809df9339cc923e1f9fc7be7c88af6b5b41b49a0a"
-PKG_REV="5"
+PKG_VERSION="3a27396"
+PKG_SHA256="e87d270e05b446174a937b0e1d468812476f332ed0c194387adbbdf2df1c2163"
+PKG_REV="6"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/notspiff/screensaver.pingpong"

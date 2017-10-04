@@ -1,5 +1,5 @@
 ################################################################################
-#      This file is part of LibreELEC - http://www.libreelec.tv
+#      This file is part of LibreELEC - https://libreelec.tv
 #      Copyright (C) 2017-present Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
@@ -16,19 +16,19 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="vfs.rar"
-PKG_VERSION="22292bc"
-PKG_SHA256="4d2df1c6dc31f46dedf828f057ed90ca83f400c6f521c1a05510f82999febcaa"
-PKG_REV="5"
+PKG_NAME="zstd"
+PKG_VERSION="1.3.1"
+PKG_SHA256="312fb9dc75668addbc9c8f33c7fa198b0fc965c576386b8451397e06256eadc6"
 PKG_ARCH="any"
-PKG_LICENSE="GPL"
-PKG_SITE="http://www.kodi.tv"
-PKG_URL="https://github.com/notspiff/vfs.rar/archive/$PKG_VERSION.tar.gz"
-PKG_DEPENDS_TARGET="toolchain kodi-platform"
-PKG_SECTION=""
-PKG_SHORTDESC="vfs.rar"
-PKG_LONGDESC="vfs.rar"
+PKG_LICENSE="BSD/GPLv2"
+PKG_SITE="http://www.zstd.net"
+PKG_URL="https://github.com/facebook/zstd/archive/v${PKG_VERSION}.tar.gz"
+PKG_SOURCE_DIR=$PKG_NAME-$PKG_VERSION
+PKG_DEPENDS_TARGET="toolchain"
+PKG_SECTION="compress"
+PKG_SHORTDESC="fast real-time compression algorithm"
+
 PKG_AUTORECONF="no"
 
-PKG_IS_ADDON="yes"
-PKG_ADDON_TYPE="kodi.vfs"
+PKG_CMAKE_SCRIPT="$PKG_BUILD/build/cmake/CMakeLists.txt"
+PKG_CMAKE_OPTS_HOST="-DTHREADS_PTHREAD_ARG=0"

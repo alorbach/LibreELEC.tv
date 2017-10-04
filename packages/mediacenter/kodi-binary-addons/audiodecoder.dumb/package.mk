@@ -17,9 +17,9 @@
 ################################################################################
 
 PKG_NAME="audiodecoder.dumb"
-PKG_VERSION="fbe7090"
-PKG_SHA256="8b91aec227250e9ec25010db1775aaf443e8923618b5097a9805db286929c7da"
-PKG_REV="5"
+PKG_VERSION="be3e3d6"
+PKG_SHA256="f95d1175cba66b4443b089d8e788a0709c92d4556d45b1abc11647cb67e2a34d"
+PKG_REV="6"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/notspiff/audiodecoder.dumb"

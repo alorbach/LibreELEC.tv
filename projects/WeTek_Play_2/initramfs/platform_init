@@ -41,10 +41,6 @@ echo 0 > /sys/class/graphics/fb1/free_scale
 # set initial video state
 echo 1 > /sys/class/video/disable_video
 
-# rendercapture does not like double_write_mode=0x0 (stolen from @seo)
-# https://github.com/stefansaraev/TB/commit/2d3c809c3c5e34e5ca0730543f6704794892f1be
-echo 0x2 > /sys/module/amvdec_h265/parameters/double_write_mode
-
 # Set framebuffer geometry to match the resolution
 case $hdmimode in
   480*)            X=720  Y=480  ;;
