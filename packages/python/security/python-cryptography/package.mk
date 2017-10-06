@@ -39,6 +39,7 @@ pre_configure_target() {
 
   export PYTHONXCPREFIX="$SYSROOT_PREFIX/usr"
   export LDSHARED="$CC -shared"
+  export LDFLAGS="$LDFLAGS -pthread"
 }
 
 make_target() {
