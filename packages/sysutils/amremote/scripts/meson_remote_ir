@@ -20,9 +20,9 @@ disable_meson_remote_ir() {
     if [ $(/usr/bin/fdtget -t s "$DTB" "meson-remote" "status") = "okay" ];then
         remount "rw"
         echo "Disabling meson-remote in dtb"
-        /usr/bin/fdtput -t s "$DTB" "meson-remote" "status" "disabled"
+        /usr/bin/fdtput -t s "$DTB" "/meson-remote/" "status" "disabled"
         echo "Disabling meson-ir in dtb"
-        /usr/bin/fdtput -t s "$DTB" "meson-ir" "status" "disabled"
+        /usr/bin/fdtput -t s "$DTB" "/meson-ir/" "status" "disabled"
         echo "Warning: You need to reboot your system"
         remount "ro"
     else

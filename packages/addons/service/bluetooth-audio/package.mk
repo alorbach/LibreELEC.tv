@@ -1,6 +1,6 @@
 ################################################################################
 #      This file is part of LibreELEC - https://libreelec.tv
-#      Copyright (C) 2016-2017 Team LibreELEC
+#      Copyright (C) 2016-present Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -16,13 +16,31 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="libite"
-PKG_VERSION="1.8.3"
-PKG_LICENSE="MIT"
-PKG_SITE="https://github.com/troglobit/libite"
-PKG_URL="https://github.com/troglobit/libite/archive/v$PKG_VERSION.tar.gz"
+PKG_NAME="bluetooth-audio"
+PKG_VERSION="0"
+PKG_REV="102"
+PKG_ARCH="any"
+PKG_LICENSE="GPL"
+PKG_SITE=""
+PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain"
-PKG_LONGDESC="That missing frog DNA you've been looking for"
-PKG_AUTORECONF="yes"
+PKG_SECTION="service"
+PKG_SHORTDESC="Provides the ability to change the kodi audio device if a bluetooth audio device is connected"
+PKG_LONGDESC="Provides the ability to change the kodi audio device if a bluetooth audio device is connected"
+PKG_AUTORECONF="no"
 
-PKG_CONFIGURE_OPTS_TARGET="--enable-static --disable-shared"
+PKG_IS_ADDON="yes"
+PKG_ADDON_NAME="Bluetooth Audio Device Changer"
+PKG_ADDON_TYPE="xbmc.service"
+
+make_target() {
+  :
+}
+
+makeinstall_target() {
+  :
+}
+
+addon() {
+  :
+}
