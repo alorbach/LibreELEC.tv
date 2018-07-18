@@ -1,0 +1,24 @@
+diff -Nur a/configure.ac b/configure.ac
+--- a/configure.ac	2018-07-25 14:36:36.000000000 +0200
++++ b/configure.ac	2018-07-26 20:46:12.504130620 +0200
+@@ -72,7 +72,7 @@
+ if test "$USE_DRM" = "yes"; then
+     saved_CPPFLAGS="$CPPFLAGS"
+     CPPFLAGS="$CPPFLAGS $DRM_CFLAGS"
+-    AC_CHECK_HEADERS([drm_fourcc.h], [:], [USE_DRM="no"])
++    AC_CHECK_HEADERS([drm/drm_fourcc.h], [:], [USE_DRM="no"])
+     CPPFLAGS="$saved_CPPFLAGS"
+ fi
+ 
+diff -Nur a/src/video.c b/src/video.c
+--- a/src/video.c	2018-07-25 14:36:36.000000000 +0200
++++ b/src/video.c	2018-07-26 20:46:26.367690885 +0200
+@@ -28,7 +28,7 @@
+ #include <string.h>
+ #include <sys/ioctl.h>
+ 
+-#include <drm_fourcc.h>
++#include <drm/drm_fourcc.h>
+ #include <linux/videodev2.h>
+ 
+ #include "utils.h"

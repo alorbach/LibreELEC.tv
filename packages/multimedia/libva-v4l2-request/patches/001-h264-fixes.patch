@@ -1,0 +1,96 @@
+diff --git a/src/h264.c b/src/h264.c
+index 12b8aa2..4f4e667 100644
+--- a/src/h264.c
++++ b/src/h264.c
+@@ -200,8 +200,14 @@ static void h264_fill_dpb(struct request_data *data,
+ 		if (entry->used)
+ 			dpb->flags |= V4L2_H264_DPB_ENTRY_FLAG_ACTIVE;
+ 
++		if (entry->pic.flags & VA_PICTURE_H264_BOTTOM_FIELD)
++			dpb->flags |= V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD;
++		if (entry->pic.flags & VA_PICTURE_H264_TOP_FIELD)
++			dpb->flags |= V4L2_H264_DPB_ENTRY_FLAG_TOP_FIELD;
+ 		if (entry->pic.flags & VA_PICTURE_H264_LONG_TERM_REFERENCE)
+ 			dpb->flags |= V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM;
++		if (entry->pic.flags & VA_PICTURE_H264_SHORT_TERM_REFERENCE)
++			dpb->flags |= V4L2_H264_DPB_ENTRY_FLAG_SHORT_TERM;
+ 	}
+ }
+ 
+@@ -250,6 +256,9 @@ static void h264_va_picture_to_v4l2(struct request_data *driver_data,
+ 	if (VAPicture->pic_fields.bits.redundant_pic_cnt_present_flag)
+ 		pps->flags |= V4L2_H264_PPS_FLAG_REDUNDANT_PIC_CNT_PRESENT;
+ 
++	if (VAPicture->pic_fields.bits.reference_pic_flag)
++		decode->nal_ref_idc = 3;
++
+ 	sps->chroma_format_idc = VAPicture->seq_fields.bits.chroma_format_idc;
+ 	sps->bit_depth_luma_minus8 = VAPicture->bit_depth_luma_minus8;
+ 	sps->bit_depth_chroma_minus8 = VAPicture->bit_depth_chroma_minus8;
+@@ -259,8 +268,13 @@ static void h264_va_picture_to_v4l2(struct request_data *driver_data,
+ 		VAPicture->seq_fields.bits.log2_max_pic_order_cnt_lsb_minus4;
+ 	sps->pic_order_cnt_type = VAPicture->seq_fields.bits.pic_order_cnt_type;
+ 	sps->pic_width_in_mbs_minus1 = VAPicture->picture_width_in_mbs_minus1;
+-	sps->pic_height_in_map_units_minus1 =
+-		VAPicture->picture_height_in_mbs_minus1;
++	if (VAPicture->seq_fields.bits.frame_mbs_only_flag)
++		sps->pic_height_in_map_units_minus1 =
++			VAPicture->picture_height_in_mbs_minus1;
++	else
++		sps->pic_height_in_map_units_minus1 =
++			(VAPicture->picture_height_in_mbs_minus1 + 1) / 2 - 1;
++
+ 
+ 	if (VAPicture->seq_fields.bits.residual_colour_transform_flag)
+ 		sps->flags |= V4L2_H264_SPS_FLAG_SEPARATE_COLOUR_PLANE;
+@@ -334,6 +348,7 @@ static void h264_va_slice_to_v4l2(struct request_data *driver_data,
+ 		VASlice->disable_deblocking_filter_idc;
+ 	slice->slice_alpha_c0_offset_div2 = VASlice->slice_alpha_c0_offset_div2;
+ 	slice->slice_beta_offset_div2 = VASlice->slice_beta_offset_div2;
++	slice->frame_num = VAPicture->frame_num;
+ 
+ 	if (((VASlice->slice_type % 5) == H264_SLICE_P) ||
+ 	    ((VASlice->slice_type % 5) == H264_SLICE_B)) {
+@@ -382,6 +397,11 @@ static void h264_va_slice_to_v4l2(struct request_data *driver_data,
+ 	slice->pred_weight_table.luma_log2_weight_denom =
+ 		VASlice->luma_log2_weight_denom;
+ 
++	if (VAPicture->pic_fields.bits.field_pic_flag)
++		slice->flags |= V4L2_H264_SLICE_FLAG_FIELD_PIC;
++	if (VAPicture->CurrPic.flags & VA_PICTURE_H264_BOTTOM_FIELD)
++		slice->flags |= V4L2_H264_SLICE_FLAG_BOTTOM_FIELD;
++
+ 	if (((VASlice->slice_type % 5) == H264_SLICE_P) ||
+ 	    ((VASlice->slice_type % 5) == H264_SLICE_B))
+ 		h264_copy_pred_table(&slice->pred_weight_table.weight_factors[0],
+@@ -421,6 +441,9 @@ int h264_set_controls(struct request_data *driver_data,
+ 
+ 	dpb_update(context, &surface->params.h264.picture);
+ 
++	dpb_insert(context, &surface->params.h264.picture.CurrPic, output);
++	dpb_lookup(context, &surface->params.h264.picture.CurrPic, &slice.buf_index);
++
+ 	h264_va_picture_to_v4l2(driver_data, context, surface,
+ 				&surface->params.h264.picture,
+ 				&decode, &pps, &sps);
+@@ -458,7 +481,5 @@ int h264_set_controls(struct request_data *driver_data,
+ 	if (rc < 0)
+ 		return VA_STATUS_ERROR_OPERATION_FAILED;
+ 
+-	dpb_insert(context, &surface->params.h264.picture.CurrPic, output);
+-
+ 	return VA_STATUS_SUCCESS;
+ }
+diff --git a/src/h264.h b/src/h264.h
+index e712a5b..4a9af5b 100644
+--- a/src/h264.h
++++ b/src/h264.h
+@@ -35,7 +35,7 @@ struct object_context;
+ struct object_surface;
+ struct request_data;
+ 
+-#define H264_DPB_SIZE 16
++#define H264_DPB_SIZE 17
+ 
+ struct h264_dpb_entry {
+ 	VAPictureH264 pic;
