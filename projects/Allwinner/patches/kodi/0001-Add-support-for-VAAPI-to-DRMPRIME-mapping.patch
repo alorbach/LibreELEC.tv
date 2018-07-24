@@ -1,0 +1,485 @@
+diff --git a/system/settings/linux.xml b/system/settings/linux.xml
+index a500ce9fe2..00d90fa202 100644
+--- a/system/settings/linux.xml
++++ b/system/settings/linux.xml
+@@ -58,97 +58,6 @@
+            </dependencies>
+           <control type="toggle" />
+         </setting>
+-        <setting id="videoplayer.usevaapi" type="boolean" label="13426" help="36156">
+-          <requirement>HAVE_LIBVA</requirement>
+-          <visible>false</visible>
+-          <level>2</level>
+-          <default>true</default>
+-          <control type="toggle" />
+-        </setting>
+-        <setting id="videoplayer.usevaapimpeg2" type="boolean" parent="videoplayer.usevaapi" label="13447" help="13448">
+-          <requirement>HAVE_LIBVA</requirement>
+-          <visible>false</visible>
+-          <dependencies>
+-            <dependency type="enable">
+-              <condition setting="videoplayer.usevaapi" operator="is">true</condition>
+-            </dependency>
+-          </dependencies>
+-          <level>3</level>
+-          <default>true</default>
+-          <control type="toggle" />
+-        </setting>
+-        <setting id="videoplayer.usevaapimpeg4" type="boolean" parent="videoplayer.usevaapi" label="13449" help="13450">
+-          <requirement>HAVE_LIBVA</requirement>
+-          <visible>false</visible>
+-          <dependencies>
+-            <dependency type="enable">
+-              <condition setting="videoplayer.usevaapi" operator="is">true</condition>
+-            </dependency>
+-          </dependencies>
+-          <level>3</level>
+-          <default>true</default>
+-          <control type="toggle" />
+-        </setting>
+-        <setting id="videoplayer.usevaapivc1" type="boolean" parent="videoplayer.usevaapi" label="13451" help="13452">
+-          <requirement>HAVE_LIBVA</requirement>
+-          <visible>false</visible>
+-          <dependencies>
+-            <dependency type="enable">
+-              <condition setting="videoplayer.usevaapi" operator="is">true</condition>
+-            </dependency>
+-          </dependencies>
+-          <level>3</level>
+-          <default>true</default>
+-          <control type="toggle" />
+-        </setting>
+-        <setting id="videoplayer.usevaapivp8" type="boolean" parent="videoplayer.usevaapi" label="13453" help="13454">
+-          <requirement>HAVE_LIBVA</requirement>
+-          <visible>false</visible>
+-          <dependencies>
+-            <dependency type="enable">
+-              <condition setting="videoplayer.usevaapi" operator="is">true</condition>
+-            </dependency>
+-          </dependencies>
+-          <level>3</level>
+-          <default>true</default>
+-          <control type="toggle" />
+-        </setting>
+-        <setting id="videoplayer.usevaapivp9" type="boolean" parent="videoplayer.usevaapi" label="13455" help="13456">
+-          <requirement>HAVE_LIBVA</requirement>
+-          <visible>false</visible>
+-          <dependencies>
+-            <dependency type="enable">
+-              <condition setting="videoplayer.usevaapi" operator="is">true</condition>
+-            </dependency>
+-          </dependencies>
+-          <level>3</level>
+-          <default>true</default>
+-          <control type="toggle" />
+-        </setting>
+-        <setting id="videoplayer.usevaapihevc" type="boolean" parent="videoplayer.usevaapi" label="13460" help="13461">
+-          <requirement>HAVE_LIBVA</requirement>
+-          <visible>false</visible>
+-          <dependencies>
+-            <dependency type="enable">
+-              <condition setting="videoplayer.usevaapi" operator="is">true</condition>
+-            </dependency>
+-          </dependencies>
+-          <level>3</level>
+-          <default>true</default>
+-          <control type="toggle" />
+-        </setting>
+-        <setting id="videoplayer.prefervaapirender" type="boolean" parent="videoplayer.usevaapi" label="13457" help="36433">
+-          <requirement>HAVE_LIBVA</requirement>
+-          <visible>false</visible>
+-          <dependencies>
+-            <dependency type="enable">
+-              <condition setting="videoplayer.usevaapi" operator="is">true</condition>
+-            </dependency>
+-          </dependencies>
+-          <level>3</level>
+-          <default>true</default>
+-          <control type="toggle" />
+-        </setting>
+       </group>
+     </category>
+   </section>
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/CMakeLists.txt b/xbmc/cores/VideoPlayer/DVDCodecs/Video/CMakeLists.txt
+index 9d7ed6683c..d04bfdbe06 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/CMakeLists.txt
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/CMakeLists.txt
+@@ -28,11 +28,6 @@ if(VDPAU_FOUND)
+   list(APPEND HEADERS VDPAU.h)
+ endif()
+ 
+-if(VAAPI_FOUND)
+-  list(APPEND SOURCES VAAPI.cpp)
+-  list(APPEND HEADERS VAAPI.h)
+-endif()
+-
+ if(APPLE)
+   list(APPEND SOURCES VTB.cpp)
+   list(APPEND HEADERS VTB.h)
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.cpp
+index 3b0d0d832d..221f48f061 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.cpp
+@@ -18,6 +18,7 @@
+ 
+ extern "C" {
+ #include "libavcodec/avcodec.h"
++#include "libavutil/hwcontext_vaapi.h"
+ #include "libavutil/pixdesc.h"
+ }
+ 
+@@ -121,13 +122,17 @@ CDVDVideoCodecDRMPRIME::CDVDVideoCodecDRMPRIME(CProcessInfo& processInfo)
+   : CDVDVideoCodec(processInfo)
+ {
+   m_pFrame = av_frame_alloc();
++  m_pHWFrame = av_frame_alloc();
+   m_videoBufferPool = std::make_shared<CVideoBufferPoolDRMPRIME>();
+ }
+ 
+ CDVDVideoCodecDRMPRIME::~CDVDVideoCodecDRMPRIME()
+ {
+   av_frame_free(&m_pFrame);
++  av_frame_free(&m_pHWFrame);
+   avcodec_free_context(&m_pCodecContext);
++  if (m_profileList)
++    delete[] m_profileList;
+ }
+ 
+ CDVDVideoCodec* CDVDVideoCodecDRMPRIME::Create(CProcessInfo& processInfo)
+@@ -143,18 +148,124 @@ void CDVDVideoCodecDRMPRIME::Register()
+   CDVDFactoryCodec::RegisterHWVideoCodec("drm_prime", CDVDVideoCodecDRMPRIME::Create);
+ }
+ 
+-static const AVCodecHWConfig* FindHWConfig(const AVCodec* codec)
++static bool SupportedPixelFormat(enum AVPixelFormat format)
++{
++  if (format == AV_PIX_FMT_DRM_PRIME)
++    return true;
++  if (format == AV_PIX_FMT_VAAPI)
++    return true;
++
++  return false;
++}
++
++// shamelessly borrowed from ffmpeg
++static const struct {
++    enum AVCodecID codec_id;
++    int codec_profile;
++    VAProfile va_profile;
++} vaapi_profile_map[] = {
++#define MAP(c, p, v) { AV_CODEC_ID_ ## c, FF_PROFILE_ ## p, VAProfile ## v }
++    MAP(MPEG2VIDEO,  MPEG2_SIMPLE,    MPEG2Simple ),
++    MAP(MPEG2VIDEO,  MPEG2_MAIN,      MPEG2Main   ),
++    MAP(H263,        UNKNOWN,         H263Baseline),
++    MAP(MPEG4,       MPEG4_SIMPLE,    MPEG4Simple ),
++    MAP(MPEG4,       MPEG4_ADVANCED_SIMPLE,
++                               MPEG4AdvancedSimple),
++    MAP(MPEG4,       MPEG4_MAIN,      MPEG4Main   ),
++    MAP(H264,        H264_CONSTRAINED_BASELINE,
++                           H264ConstrainedBaseline),
++    MAP(H264,        H264_MAIN,       H264Main    ),
++    MAP(H264,        H264_HIGH,       H264High    ),
++    MAP(HEVC,        HEVC_MAIN,       HEVCMain    ),
++    MAP(HEVC,        HEVC_MAIN_10,    HEVCMain10  ),
++    MAP(MJPEG,       MJPEG_HUFFMAN_BASELINE_DCT,
++                                      JPEGBaseline),
++    MAP(WMV3,        VC1_SIMPLE,      VC1Simple   ),
++    MAP(WMV3,        VC1_MAIN,        VC1Main     ),
++    MAP(WMV3,        VC1_COMPLEX,     VC1Advanced ),
++    MAP(WMV3,        VC1_ADVANCED,    VC1Advanced ),
++    MAP(VC1,         VC1_SIMPLE,      VC1Simple   ),
++    MAP(VC1,         VC1_MAIN,        VC1Main     ),
++    MAP(VC1,         VC1_COMPLEX,     VC1Advanced ),
++    MAP(VC1,         VC1_ADVANCED,    VC1Advanced ),
++    MAP(VP8,         UNKNOWN,       VP8Version0_3 ),
++    MAP(VP9,         VP9_0,           VP9Profile0 ),
++    MAP(VP9,         VP9_2,           VP9Profile2 ),
++#undef MAP
++};
++
++void CDVDVideoCodecDRMPRIME::LoadVAAPIProfiles(void)
++{
++  CWinSystemGbm* winSystem = dynamic_cast<CWinSystemGbm*>(CServiceBroker::GetWinSystem());
++
++  int fd = open(winSystem->GetDevicePath().c_str(), O_RDWR);
++  auto display = vaGetDisplayDRM(fd);
++  if (display == nullptr)
++  {
++    close(fd);
++    return;
++  }
++
++  int major_version, minor_version;
++  if (vaInitialize(display, &major_version, &minor_version))
++  {
++    close(fd);
++    return;
++  }
++
++  int max_profiles = vaMaxNumProfiles(display);
++  m_profileList = new VAProfile[max_profiles];
++
++  if (m_profileList && vaQueryConfigProfiles(display, m_profileList, &m_profileCount))
++    m_profileCount = 0;
++
++  vaTerminate(display);
++  close(fd);
++}
++
++bool CDVDVideoCodecDRMPRIME::SupportedVAAPIProfile(enum AVCodecID codec_id, int profile)
++{
++  if (m_profileList == nullptr || m_profileCount == 0)
++    LoadVAAPIProfiles();
++  if (m_profileList == nullptr || m_profileCount == 0)
++    return false;
++
++  if (codec_id == AV_CODEC_ID_H264)
++    return true;
++  if (codec_id == AV_CODEC_ID_MPEG2VIDEO)
++    return true;
++
++  for (auto &map : vaapi_profile_map)
++  {
++    if (codec_id != map.codec_id)
++      continue;
++    if (profile != map.codec_profile && map.codec_profile != FF_PROFILE_UNKNOWN)
++      continue;
++    for (int i = 0; i < m_profileCount; i++)
++      if (m_profileList[i] == map.va_profile)
++        return true;
++  }
++
++  return false;
++}
++
++const AVCodecHWConfig* CDVDVideoCodecDRMPRIME::FindHWConfig(const AVCodec* codec, CDVDStreamInfo& hints)
+ {
+   const AVCodecHWConfig* config = nullptr;
+   for (int n = 0; (config = avcodec_get_hw_config(codec, n)); n++)
+   {
+-    if (config->pix_fmt != AV_PIX_FMT_DRM_PRIME)
++    if (!SupportedPixelFormat(config->pix_fmt))
+       continue;
+ 
+     if ((config->methods & AV_CODEC_HW_CONFIG_METHOD_HW_DEVICE_CTX) &&
+         config->device_type == AV_HWDEVICE_TYPE_DRM)
+       return config;
+ 
++    if ((config->methods & AV_CODEC_HW_CONFIG_METHOD_HW_DEVICE_CTX) &&
++        config->device_type == AV_HWDEVICE_TYPE_VAAPI &&
++        SupportedVAAPIProfile(hints.codec, hints.profile))
++      return config;
++
+     if ((config->methods & AV_CODEC_HW_CONFIG_METHOD_INTERNAL))
+       return config;
+   }
+@@ -162,7 +273,7 @@ static const AVCodecHWConfig* FindHWConfig(const AVCodec* codec)
+   return nullptr;
+ }
+ 
+-static const AVCodec* FindDecoder(CDVDStreamInfo& hints)
++const AVCodec* CDVDVideoCodecDRMPRIME::FindDecoder(CDVDStreamInfo& hints)
+ {
+   const AVCodec* codec = nullptr;
+   void *i = 0;
+@@ -174,7 +285,7 @@ static const AVCodec* FindDecoder(CDVDStreamInfo& hints)
+     if (codec->id != hints.codec)
+       continue;
+ 
+-    const AVCodecHWConfig* config = FindHWConfig(codec);
++    const AVCodecHWConfig* config = FindHWConfig(codec, hints);
+     if (config)
+       return codec;
+   }
+@@ -185,7 +296,7 @@ static const AVCodec* FindDecoder(CDVDStreamInfo& hints)
+ static enum AVPixelFormat GetFormat(struct AVCodecContext* avctx, const enum AVPixelFormat* fmt)
+ {
+   for (int n = 0; fmt[n] != AV_PIX_FMT_NONE; n++)
+-    if (fmt[n] == AV_PIX_FMT_DRM_PRIME)
++    if (SupportedPixelFormat(fmt[n]))
+       return fmt[n];
+ 
+   return AV_PIX_FMT_NONE;
+@@ -206,21 +317,29 @@ bool CDVDVideoCodecDRMPRIME::Open(CDVDStreamInfo& hints, CDVDCodecOptions& optio
+   if (!m_pCodecContext)
+     return false;
+ 
+-  const AVCodecHWConfig* pConfig = FindHWConfig(pCodec);
++  const AVCodecHWConfig* pConfig = FindHWConfig(pCodec, hints);
+   if (pConfig &&
+-      (pConfig->methods & AV_CODEC_HW_CONFIG_METHOD_HW_DEVICE_CTX) &&
+-      pConfig->device_type == AV_HWDEVICE_TYPE_DRM)
++      (pConfig->methods & AV_CODEC_HW_CONFIG_METHOD_HW_DEVICE_CTX))
+   {
+     CWinSystemGbm* winSystem = dynamic_cast<CWinSystemGbm*>(CServiceBroker::GetWinSystem());
+-    if (av_hwdevice_ctx_create(&m_pCodecContext->hw_device_ctx, AV_HWDEVICE_TYPE_DRM, winSystem->GetDevicePath().c_str(), nullptr, 0) < 0)
++    if (av_hwdevice_ctx_create(&m_pCodecContext->hw_device_ctx, pConfig->device_type, winSystem->GetDevicePath().c_str(), nullptr, 0) < 0)
+     {
+       CLog::Log(LOGNOTICE, "CDVDVideoCodecDRMPRIME::%s - unable to create hwdevice context", __FUNCTION__);
+       avcodec_free_context(&m_pCodecContext);
+       return false;
+     }
++
++    if (pConfig->device_type == AV_HWDEVICE_TYPE_VAAPI)
++    {
++      AVHWDeviceContext *deviceCtx = (AVHWDeviceContext*)m_pCodecContext->hw_device_ctx->data;
++      AVVAAPIDeviceContext *vaapiDeviceCtx = (AVVAAPIDeviceContext*)deviceCtx->hwctx;
++      vaapiDeviceCtx->driver_quirks = AV_VAAPI_DRIVER_QUIRK_RENDER_PARAM_BUFFERS;
++      m_pCodecContext->slice_flags = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
++    }
+   }
+ 
+-  m_pCodecContext->pix_fmt = AV_PIX_FMT_DRM_PRIME;
++  CLog::Log(LOGNOTICE, "CDVDVideoCodecDRMPRIME::%s - selected device type: %s", __FUNCTION__, av_hwdevice_get_type_name(pConfig->device_type));
++
+   m_pCodecContext->get_format = GetFormat;
+   m_pCodecContext->codec_tag = hints.codec_tag;
+   m_pCodecContext->coded_width = hints.width;
+@@ -243,12 +362,7 @@ bool CDVDVideoCodecDRMPRIME::Open(CDVDStreamInfo& hints, CDVDCodecOptions& optio
+     return false;
+   }
+ 
+-  if (m_pCodecContext->pix_fmt != AV_PIX_FMT_DRM_PRIME)
+-  {
+-    CLog::Log(LOGNOTICE, "CDVDVideoCodecDRMPRIME::%s - unexpected pix fmt %s", __FUNCTION__, av_get_pix_fmt_name(m_pCodecContext->pix_fmt));
+-    avcodec_free_context(&m_pCodecContext);
+-    return false;
+-  }
++  m_mapFrame = pConfig->device_type != AV_HWDEVICE_TYPE_DRM;
+ 
+   const char* pixFmtName = av_get_pix_fmt_name(m_pCodecContext->pix_fmt);
+   m_processInfo.SetVideoPixelFormat(pixFmtName ? pixFmtName : "");
+@@ -301,6 +415,8 @@ void CDVDVideoCodecDRMPRIME::Reset()
+ 
+   avcodec_flush_buffers(m_pCodecContext);
+   av_frame_unref(m_pFrame);
++  if (m_mapFrame)
++    av_frame_unref(m_pHWFrame);
+   m_codecControlFlags = 0;
+ }
+ 
+@@ -319,7 +435,7 @@ void CDVDVideoCodecDRMPRIME::SetPictureParams(VideoPicture* pVideoPicture)
+   pVideoPicture->iHeight = m_pFrame->height;
+ 
+   double aspect_ratio = 0;
+-  AVRational pixel_aspect = m_pFrame->sample_aspect_ratio;
++  AVRational pixel_aspect = m_pCodecContext->sample_aspect_ratio;
+   if (pixel_aspect.num)
+     aspect_ratio = av_q2d(pixel_aspect) * pVideoPicture->iWidth / pVideoPicture->iHeight;
+ 
+@@ -354,10 +470,16 @@ void CDVDVideoCodecDRMPRIME::SetPictureParams(VideoPicture* pVideoPicture)
+ 
+ CDVDVideoCodec::VCReturn CDVDVideoCodecDRMPRIME::GetPicture(VideoPicture* pVideoPicture)
+ {
++  int ret;
++
+   if (m_codecControlFlags & DVD_CODEC_CTRL_DRAIN)
+     Drain();
+ 
+-  int ret = avcodec_receive_frame(m_pCodecContext, m_pFrame);
++  if (m_mapFrame)
++    ret = avcodec_receive_frame(m_pCodecContext, m_pHWFrame);
++  else
++    ret = avcodec_receive_frame(m_pCodecContext, m_pFrame);
++
+   if (ret == AVERROR(EAGAIN))
+     return VC_BUFFER;
+   else if (ret == AVERROR_EOF)
+@@ -368,6 +490,15 @@ CDVDVideoCodec::VCReturn CDVDVideoCodecDRMPRIME::GetPicture(VideoPicture* pVideo
+     return VC_ERROR;
+   }
+ 
++  if (m_mapFrame)
++  {
++    m_pFrame->format = AV_PIX_FMT_DRM_PRIME;
++
++    ret = av_hwframe_map(m_pFrame, m_pHWFrame, 0);
++    if (ret)
++      return VC_ERROR;
++  }
++
+   if (pVideoPicture->videoBuffer)
+     pVideoPicture->videoBuffer->Release();
+   pVideoPicture->videoBuffer = nullptr;
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.h b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.h
+index f263f559ce..45e50c1774 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.h
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.h
+@@ -13,6 +13,9 @@
+ #include "cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodec.h"
+ #include "cores/VideoPlayer/Process/VideoBuffer.h"
+ 
++#include <va/va.h>
++#include <va/va_drm.h>
++
+ extern "C" {
+ #include "libavutil/frame.h"
+ #include "libavutil/hwcontext_drm.h"
+@@ -60,10 +63,18 @@ public:
+ protected:
+   void Drain();
+   void SetPictureParams(VideoPicture* pVideoPicture);
++  const AVCodec* FindDecoder(CDVDStreamInfo& hints);
++  const AVCodecHWConfig* FindHWConfig(const AVCodec* codec, CDVDStreamInfo& hints);
++  bool SupportedVAAPIProfile(enum AVCodecID codec_id, int profile);
++  void LoadVAAPIProfiles(void);
+ 
++  int m_profileCount = 0;
++  VAProfile *m_profileList = nullptr;
+   std::string m_name;
+   int m_codecControlFlags = 0;
+   AVCodecContext* m_pCodecContext = nullptr;
+   AVFrame* m_pFrame = nullptr;
++  AVFrame* m_pHWFrame = nullptr;
++  bool m_mapFrame = false;
+   std::shared_ptr<CVideoBufferPoolDRMPRIME> m_videoBufferPool;
+ };
+diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
+index 689ff7e67a..979d736c44 100644
+--- a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
++++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
+@@ -3,18 +3,6 @@ if(CORE_SYSTEM_NAME STREQUAL windows OR CORE_SYSTEM_NAME STREQUAL windowsstore)
+   list(APPEND HEADERS DXVAHD.h)
+ endif()
+ 
+-if(VAAPI_FOUND)
+-  if(OPENGL_FOUND)
+-    list(APPEND SOURCES RendererVAAPIGL.cpp)
+-    list(APPEND HEADERS RendererVAAPIGL.h)
+-  elseif(OPENGLES_FOUND)
+-    list(APPEND SOURCES RendererVAAPIGLES.cpp)
+-    list(APPEND HEADERS RendererVAAPIGLES.h)
+-  endif()
+-  list(APPEND SOURCES VaapiEGL.cpp)
+-  list(APPEND HEADERS VaapiEGL.h)
+-endif()
+-
+ if(VDPAU_FOUND)
+   list(APPEND SOURCES RendererVDPAU.cpp
+                       VdpauGL.cpp)
+diff --git a/xbmc/settings/SettingConditions.cpp b/xbmc/settings/SettingConditions.cpp
+index 9022aac487..eca5d2e1b0 100644
+--- a/xbmc/settings/SettingConditions.cpp
++++ b/xbmc/settings/SettingConditions.cpp
+@@ -306,7 +306,7 @@ void CSettingConditions::Initialize(const CProfilesManager &profileManager)
+ #ifdef TARGET_RASPBERRY_PI
+   m_simpleConditions.insert("has_omxplayer");
+ #endif
+-#ifdef HAVE_LIBVA
++#if 0
+   m_simpleConditions.insert("have_libva");
+ #endif
+ #ifdef HAVE_LIBVDPAU
+diff --git a/xbmc/windowing/gbm/OptionalsReg.cpp b/xbmc/windowing/gbm/OptionalsReg.cpp
+index 8db3f4778d..ea7a683b7a 100644
+--- a/xbmc/windowing/gbm/OptionalsReg.cpp
++++ b/xbmc/windowing/gbm/OptionalsReg.cpp
+@@ -11,7 +11,7 @@
+ //-----------------------------------------------------------------------------
+ // VAAPI
+ //-----------------------------------------------------------------------------
+-#if defined (HAVE_LIBVA)
++#if 0
+ #include <va/va_drm.h>
+ #include "cores/VideoPlayer/DVDCodecs/Video/VAAPI.h"
+ #include "cores/VideoPlayer/VideoRenderers/HwDecRender/RendererVAAPIGLES.h"
