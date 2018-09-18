@@ -11,6 +11,7 @@ devices = {
 
   'Allwinner' : {
     'H3' : {
+      'beelink_x2' : { 'dtb' : 'sun8i-h3-beelink-x2.dtb', 'config' : 'beelink_x2_defconfig' },
       'orangepi_2' : { 'dtb' : 'sun8i-h3-orangepi-2.dtb', 'config' : 'orangepi_2_defconfig' },
       'orangepi_lite': { 'dtb': 'sun8i-h3-orangepi-lite.dtb', 'config': 'orangepi_lite_defconfig' },
       'orangepi_one': { 'dtb': 'sun8i-h3-orangepi-one.dtb', 'config': 'orangepi_one_defconfig' },
